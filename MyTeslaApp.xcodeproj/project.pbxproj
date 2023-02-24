@@ -11,6 +11,10 @@
 		F178E37929A8BF9E00CE7AEC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F178E37829A8BF9E00CE7AEC /* ContentView.swift */; };
 		F178E37B29A8BFA000CE7AEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F178E37A29A8BFA000CE7AEC /* Assets.xcassets */; };
 		F178E37E29A8BFA000CE7AEC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F178E37D29A8BFA000CE7AEC /* Preview Assets.xcassets */; };
+		F178E38529A8F4A200CE7AEC /* CarControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F178E38429A8F4A200CE7AEC /* CarControlsView.swift */; };
+		F178E38729A8FD3300CE7AEC /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F178E38629A8FD3300CE7AEC /* LocationView.swift */; };
+		F178E38929A8FD4600CE7AEC /* CommonComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F178E38829A8FD4600CE7AEC /* CommonComponents.swift */; };
+		F178E38B29A90ADE00CE7AEC /* ActionComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F178E38A29A90ADE00CE7AEC /* ActionComponents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		F178E37829A8BF9E00CE7AEC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F178E37A29A8BFA000CE7AEC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F178E37D29A8BFA000CE7AEC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F178E38429A8F4A200CE7AEC /* CarControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarControlsView.swift; sourceTree = "<group>"; };
+		F178E38629A8FD3300CE7AEC /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
+		F178E38829A8FD4600CE7AEC /* CommonComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonComponents.swift; sourceTree = "<group>"; };
+		F178E38A29A90ADE00CE7AEC /* ActionComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionComponents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +61,10 @@
 			children = (
 				F178E37629A8BF9E00CE7AEC /* MyTeslaAppApp.swift */,
 				F178E37829A8BF9E00CE7AEC /* ContentView.swift */,
+				F178E38A29A90ADE00CE7AEC /* ActionComponents.swift */,
+				F178E38429A8F4A200CE7AEC /* CarControlsView.swift */,
+				F178E38629A8FD3300CE7AEC /* LocationView.swift */,
+				F178E38829A8FD4600CE7AEC /* CommonComponents.swift */,
 				F178E37A29A8BFA000CE7AEC /* Assets.xcassets */,
 				F178E37C29A8BFA000CE7AEC /* Preview Content */,
 			);
@@ -138,6 +150,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F178E37929A8BF9E00CE7AEC /* ContentView.swift in Sources */,
+				F178E38729A8FD3300CE7AEC /* LocationView.swift in Sources */,
+				F178E38929A8FD4600CE7AEC /* CommonComponents.swift in Sources */,
+				F178E38B29A90ADE00CE7AEC /* ActionComponents.swift in Sources */,
+				F178E38529A8F4A200CE7AEC /* CarControlsView.swift in Sources */,
 				F178E37729A8BF9E00CE7AEC /* MyTeslaAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

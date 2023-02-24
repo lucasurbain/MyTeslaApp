@@ -8,28 +8,71 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var openVoiceCommand: Bool = false
+    @State private var openMediaControls: Bool = false
+    @State private var openCharging: Bool = false
+    @State private var openMedia: Bool = false
+    
+    @State private var actionText = ""
+    @State private var actionIcon = ""
+    @State private var openAction = false
+    
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    HomeHeader()
-                    CustomDivider()
-                    CarSection()
-                    CustomDivider()
-                    CategoryView(title: "Quick Shortcuts", showEdit: true, actionItem: quickShortcuts)
-                    CustomDivider()
-                    CategoryView(title: "Recent Ations", actionItem: recentActions)
-                    CustomDivider()
-                    AllSetings()
-                    ReorderButton()
+        NavigationView {
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        HomeHeader()
+                        CustomDivider()
+                        CarSection(openCharging: $openCharging)
+                        CustomDivider()
+                        CategoryView(openAction: $openAction, actionText: $actionText, actionIcon: $actionIcon, openCharging: $openCharging, openMedia: $openMediaControls, title: "Quick Shortcuts", showEdit: true, actionItem: quickShortcuts)
+                        CustomDivider()
+                        CategoryView(openAction: $openAction, actionText: $actionText, actionIcon: $actionIcon, openCharging: $openCharging, openMedia: $openMediaControls, title: "Recent Actions", showEdit: true, actionItem: recentActions)
+                        CustomDivider()
+                        AllSetings()
+                        ReorderButton()
+                    }
+                    .padding()
                 }
-                .padding()
+                VoiceCommandButton(open: $openVoiceCommand)
+                
+                if (openVoiceCommand || openCharging || openMedia) {
+                    Color.black.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                        .transition(.opacity)
+                        .onTapGesture {
+                            withAnimation {
+                                openVoiceCommand = false
+                                openCharging = false
+                                openMedia = false
+                            }
+                        }
+                }
+                
+                if openVoiceCommand {
+                    VoiceCommandView(open: $openVoiceCommand, text: "Take me to Lausanne")
+                        .zIndex(1)
+                        .transition(.move(edge: .bottom))
+                }
+                
+                if openCharging {
+                    ChargingView()
+                        .zIndex(1)
+                        .transition(.move(edge: .bottom))
+                }
+                
+                if openMedia {
+                    MediaPlayer()
+                        .zIndex(1)
+                        .transition(.move(edge: .bottom))
+                }
             }
-            VoiceCommandButton()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color("DarkGray"))
+            .foregroundColor(Color.white)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color("DarkGray"))
-        .foregroundColor(Color.white)
     }
 }
 
@@ -41,19 +84,28 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct VoiceCommandButton: View {
+    
+    @Binding var open: Bool
+    
     var body: some View {
         VStack {
             Spacer()
             HStack {
                 Spacer()
-                Image(systemName: "mic.fill")
-                    .font(.system(size: 24, weight: .semibold, design: .default))
-                    .frame(width: 64, height: 64)
-                    .background(Color("Green"))
-                    .foregroundColor(Color("DarkGray"))
-                    .clipShape(Circle())
-                    .padding()
-                    .shadow(radius: 10)
+                Button(action: {
+                    withAnimation {
+                        open = true
+                    }
+                }){
+                    Image(systemName: "mic.fill")
+                        .font(.system(size: 24, weight: .semibold, design: .default))
+                        .frame(width: 64, height: 64)
+                        .background(Color("Green"))
+                        .foregroundColor(Color("DarkGray"))
+                        .clipShape(Circle())
+                        .padding()
+                        .shadow(radius: 10)
+                }
             }
         }
         .edgesIgnoringSafeArea(.all)
@@ -89,44 +141,23 @@ struct HomeHeader: View {
     }
 }
 
-struct GeneralButton: View {
-    
-    var icon: String
-    
-    var body: some View {
-        Image(systemName: icon)
-            .imageScale(.large)
-            .frame(width: 44, height: 44)
-            .background(Color.white.opacity(0.05))
-            .clipShape(Circle())
-            .overlay(
-                Circle()
-                    .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
-            )
-          
-    }
-}
-
-struct CustomDivider: View {
-    var body: some View {
-        Rectangle()
-            .frame(maxWidth: .infinity)
-            .frame(height: 0.5)
-            .background(Color.white)
-            .opacity(0.1)
-    }
-}
-
 struct CarSection: View {
+    
+    @Binding var openCharging: Bool
+    
     var body: some View {
         VStack(spacing: 20) {
             HStack(alignment: .center) {
-                HStack {
-                    Image(systemName: "battery.75")
-                    Text("453 km".uppercased())
+                Button(action: {
+                    withAnimation {
+                        openCharging = true
+                    }
+                }) {
+                    Label("453 km".uppercased(), systemImage: "battery.75")
+                    
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundColor(Color("Green"))
                 }
-                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                .foregroundColor(Color("Green"))
                 Spacer()
                 VStack(alignment: .trailing) {
                     Text("Parked")
@@ -167,6 +198,13 @@ struct CategoryHeader: View {
 
 struct CategoryView: View {
     
+    @Binding var openAction: Bool
+    @Binding var actionText: String
+    @Binding var actionIcon: String
+    
+    @Binding var openCharging: Bool
+    @Binding var openMedia: Bool
+    
     var title: String
     var showEdit: Bool = false
     
@@ -177,8 +215,24 @@ struct CategoryView: View {
             CategoryHeader(title: title, showEdit: showEdit)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top) {
+                    if title == "Quick Shortcuts" {
+                        Button(action: {withAnimation{openCharging = true}}) {
+                            ActionButton(item: chargingShortcut)
+                        }
+                        Button(action: {withAnimation{openMedia = true}}) {
+                            ActionButton(item: mediaShortcut)
+                        }
+                    }
                     ForEach(actionItem, id: \.self) { item in
-                        ActionButton(item: item)
+                        Button(action: {
+                            withAnimation {
+                                openAction = true
+                                actionText = item.text
+                                actionIcon = item.icon
+                            }
+                        }){
+                            ActionButton(item: item)
+                        }
                     }
                 }
             }
@@ -186,32 +240,14 @@ struct CategoryView: View {
     }
 }
 
-struct ActionButton: View {
-    
-    var item: ActionItem
-    
-    var body: some View {
-        VStack(alignment: .center) {
-            GeneralButton(icon: item.icon)
-            Text(item.text)
-                .frame(width: 72)
-                .font(.system(size: 12, weight: .semibold, design: .default))
-                .multilineTextAlignment(.center)
-        }
-    }
-}
-
-struct ActionItem: Hashable {
-    var icon: String
-    var text: String
-}
 
 let quickShortcuts: [ActionItem] = [
-    ActionItem(icon: "bolt.fill", text: "Charging"),
     ActionItem(icon: "fanblades.fill", text: "Fan On"),
-    ActionItem(icon: "music.note", text: "Media Controls"),
     ActionItem(icon: "bolt.car", text: "Close Charge Port")
 ]
+
+let chargingShortcut = ActionItem(icon: "bolt.fill", text: "Charging")
+let mediaShortcut = ActionItem(icon: "music.note", text: "Media Controls")
 
 let recentActions: [ActionItem] = [
     ActionItem(icon: "arrow.up.square", text: "Open Trunk"),
@@ -224,9 +260,13 @@ struct AllSetings: View {
         VStack {
             CategoryHeader(title: "All Setings")
             LazyVGrid(columns: [GridItem(.fixed(170)),GridItem(.fixed(170))]) {
-                SettingBlock(icon: "car.fill", title: "Controls", subtitle: "CAR LOCK", hasSubtitle: true)
+                NavigationLink(destination: CarControlsView()) {
+                    SettingBlock(icon: "car.fill", title: "Controls", subtitle: "CAR LOCK", hasSubtitle: true)
+                }
                 SettingBlock(icon: "fanblades.fill", title: "Climate", subtitle: "INTERIOR 24° C", hasSubtitle: true, backgroundColor: Color("Blue"))
-                SettingBlock(icon: "location.fill", title: "Location",subtitle: "Bulle, Fribourg (CH)", hasSubtitle: true)
+                NavigationLink(destination: LocationView()){
+                    SettingBlock(icon: "location.fill", title: "Location",subtitle: "Bulle, Fribourg (CH)", hasSubtitle: true)
+                }
                 SettingBlock(icon: "checkerboard.shield", title: "Security",subtitle: "3 EVENTS DETECTED", hasSubtitle: true)
                 SettingBlock(icon: "sparkle", title: "Upgrades",subtitle: "1 UPGRADES AVAILABLE", hasSubtitle: true)
             }
